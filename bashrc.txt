@@ -25,7 +25,7 @@ function parse_git_branch {
 
 export PS1='\n[$(date +%H:%M:%S)] \u:\[\033[32;40m\]\w\[\033[33;1m\]$(parse_git_branch)\[\e[0m\]$ \n -> '
 
-
+# https://github.com/git/git/blob/master/contrib/completion/git-completion.bash
 source ~/git-completion.bash
 
 # https://github.com/kenhkelly/GoWeather
