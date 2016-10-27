@@ -1,0 +1,15 @@
+[user]
+        name = {{ name }}
+        email = {{ email address }}
+[color]
+        ui = auto
+[alias]
+        tree = log --graph --decorate --pretty=oneline --abbrev-commit
+        today = log --since="12am"
+        me = log --author="ken"
+        metoday = log --author="ken" --since="12am"
+        st = status --short --branch
+        grog = log --graph --abbrev-commit --decorate --all --format=format:\"%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(dim white) - %an%C(reset) %C(bold green)(%ar)%C(reset)%C(bold yellow)%d%C(reset)%n %C(white)%s%C(reset)\"
+        changelog = log ORIG_HEAD..
+[push]
+        default = tracking
