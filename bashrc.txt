@@ -1,0 +1,75 @@
+# .bashrc
+
+# User specific aliases and functions
+
+alias rm='rm -i'
+alias cp='cp -i'
+alias mv='mv -i'
+
+# Source global definitions
+if [ -f /etc/bashrc ]; then
+        . /etc/bashrc
+fi
+
+alias vi=vim
+alias la="ls -la"
+
+function parse_git_dirty {
+  RED='\033[1;31m'
+  YELLOW='\033[33;1m'
+  [[ $(git status 2> /dev/null | tail -n1) != "nothing to commit, working directory clean" ]] && echo -e "${RED}*${YELLOW}"
+}
+function parse_git_branch {
+  git branch --no-color 2> /dev/null | sed -e '/^[^*]/d' -e "s/* \(.*\)/[\1$(parse_git_dirty)]/"
+}
+
+export PS1='\n[$(date +%H:%M:%S)] \u:\[\033[32;40m\]\w\[\033[33;1m\]$(parse_git_branch)\[\e[0m\]$ \n -> '
+
+
+source ~/git-completion.bash
+
+# https://github.com/kenhkelly/GoWeather
+#goweather
+
+alias timer='while true; do date; sleep 1; done;'
+
+alias gsync='git submodule sync && git submodule update --recursive --remote && git submodule update'
+
+alias g='git'
+alias gpush='git push'
+alias gpull='git pull'
+alias grebase='git pull --rebase'
+alias gup='git fetch && git rebase'
+alias stash='git stash'
+alias pop='git stash pop'
+
+export PATH="/usr/local/go/bin:$PATH"
+export GOPATH="/opt/gopath"
+
+fortune | cowsay -f vader-koala
+
+alias open_check='$UTILITIES_DIR/open_check.sh'
+alias opc=open_check
+alias portal_check='$UTILITIES_DIR/portal_check.sh'
+alias porc=portal_check
+alias tree="find . -print | sed -e 's;[^/]*/;|____;g;s;____|; |;g'"
+
+# /etc/profile.d/complete-hosts.sh
+# Autocomplete Hostnames for SSH etc.
+# by Jean-Sebastien Morisset (http://surniaulula.com/)
+_complete_hosts () {
+  COMPREPLY=()
+  cur="${COMP_WORDS[COMP_CWORD]}"
+  host_list=`{
+    for c in /etc/ssh_config /etc/ssh/ssh_config ~/.ssh/config
+    do [ -r $c ] && sed -n -e 's/^Host[[:space:]]//p' -e 's/^[[:space:]]*HostName[[:space:]]//p' $c
+    done
+    for k in /etc/ssh_known_hosts /etc/ssh/ssh_known_hosts ~/.ssh/known_hosts
+    do [ -r $k ] && egrep -v '^[#\[]' $k|cut -f 1 -d ' '|sed -e 's/[,:].*//g'
+    done
+    sed -n -e 's/^[0-9][0-9\.]*//p' /etc/hosts; }|tr ' ' '\n'|grep -v '*'`
+  COMPREPLY=( $(compgen -W "${host_list}" -- $cur))
+  return 0
+}
+complete -F _complete_hosts ssh
+complete -F _complete_hosts host
