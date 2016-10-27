@@ -48,10 +48,6 @@ export GOPATH="/opt/gopath"
 
 fortune | cowsay -f vader-koala
 
-alias open_check='$UTILITIES_DIR/open_check.sh'
-alias opc=open_check
-alias portal_check='$UTILITIES_DIR/portal_check.sh'
-alias porc=portal_check
 alias tree="find . -print | sed -e 's;[^/]*/;|____;g;s;____|; |;g'"
 
 # /etc/profile.d/complete-hosts.sh
