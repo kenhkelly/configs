@@ -1,0 +1,4 @@
+[
+  { "keys": ["ctrl+alt+s"], "command": "save_all" },
+  { "keys": ["ctrl+u"], "command": "soft_undo" },
+]
