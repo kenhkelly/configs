@@ -15,17 +15,20 @@ alias vi=vim
 alias la="ls -la"
 
 function git_ahead_behind {
-  [[ $(git st | grep -E 'ahead|behind' | sed -r 's/[ *]\s(\S*).*(\[(ahead|behind).+?\]).*/\1 \2/g') != "" ]] && echo -e "^"
+  BLUE='\033[1;34m'
+  YELLOW='\033[33;1m'
+  [[ $(git st 2> /dev/null | grep -E 'ahead|behind') != "" ]] && echo -e "${BLUE}^${YELLOW}"
 }
 function parse_git_dirty {
   RED='\033[1;31m'
   YELLOW='\033[33;1m'
   [[ $(git status 2> /dev/null | tail -n1) != "nothing to commit, working tree clean" ]] && echo -e "${RED}*${YELLOW}";
-  git_ahead_behind
+  #git_ahead_behind
 }
 function parse_git_branch {
-  git branch --no-color 2> /dev/null | sed -e '/^[^*]/d' -e "s/* \(.*\)/[\1$(parse_git_dirty)]/"
+git branch --no-color 2> /dev/null | sed -e '/^[^*]/d' -e "s/* \(.*\)/[\1$(parse_git_dirty)$(git_ahead_behind)]/"
 }
+
 
 export PS1='\n[$(date +%H:%M:%S)] \u:\[\033[32;40m\]\w\[\033[33;1m\]$(parse_git_branch)\[\e[0m\]$ \n -> '
 
