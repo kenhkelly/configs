@@ -49,6 +49,7 @@ alias grebase='git pull --rebase'
 alias gup='git fetch && git rebase'
 alias stash='git stash'
 alias pop='git stash pop'
+alias gupalldirs="find . -type d -maxdepth 1 -exec sh -c '(if [ {} != "." ]; then echo; echo; echo {}; cd {}; git pull --rebase; fi;)' ';'"
 
 export PATH="/usr/local/go/bin:$PATH"
 export GOPATH="/opt/gopath"
