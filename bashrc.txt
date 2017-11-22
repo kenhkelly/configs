@@ -1,18 +1,48 @@
-# .bashrc
+#~/.bashrc
 
-# User specific aliases and functions
+cat /usr/share/calendar/calendar.history | grep $(date +%m/%d)
 
-alias rm='rm -i'
-alias cp='cp -i'
-alias mv='mv -i'
+alias peak="cd ~/PeakActivity/ws-total"
+alias twgo="cd ~/PeakActivity/ws-total/src/github.com/totalwinelabs"
+alias peakgo="cd ~/PeakActivity/ws-total/src/github.com/totalwinelabs"
 
-# Source global definitions
-if [ -f /etc/bashrc ]; then
-        . /etc/bashrc
-fi
+alias atom="echo Launching Atom; /Applications/Atom.app/Contents/MacOS/atom"
 
-alias vi=vim
-alias la="ls -la"
+alias ls="ls -G"
+alias ll="ls -lG"
+alias la="ls -laG"
+
+alias cp="cp -iv"
+alias mv="mv -iv"
+alias rm="rm -iv"
+
+alias g="git"
+alias gup="git fetch && git rebase"
+alias gpush="git push"
+alias gco="git checkout"
+alias gupalldirs="find . -type d -maxdepth 1 -exec sh -c '(if [ {} != "." ]; then echo; echo; echo {}; cd {}; git pull --rebase; fi;)' ';'"
+
+cd() {
+	builtin cd "$1" && ls -lg;
+}
+alias ..="cd ../"
+alias ...="cd ../../"
+alias .3="cd ../../../"
+alias .4="cd ../../../../"
+alias .5="cd ../../../../../"
+alias .6="cd ../../../../../../"
+mcd() {
+	mkdir -p "$1"; builtin cd "$1";
+}
+
+alias getmp3="youtube-dl -x --audio-format mp3"
+alias web="cd ~/Websites"
+alias projects="cd ~/Projects"
+
+alias tag_time="date +%Y%m%d%H%M%S"
+
+# https://github.com/git/git/blob/master/contrib/completion/git-completion.bash
+source ~/.git-completion.bash
 
 function git_ahead_behind {
   BLUE='\033[1;34m'
@@ -32,15 +62,8 @@ git branch --no-color 2> /dev/null | sed -e '/^[^*]/d' -e "s/* \(.*\)/[\1$(parse
 
 export PS1='\n[$(date +%H:%M:%S)] \u:\[\033[32;40m\]\w\[\033[33;1m\]$(parse_git_branch)\[\e[0m\]$ \n -> '
 
-# https://github.com/git/git/blob/master/contrib/completion/git-completion.bash
-source ~/git-completion.bash
 
-# https://github.com/kenhkelly/GoWeather
-#goweather
-
-alias timer='while true; do date; sleep 1; done;'
-
-alias gsync='git submodule sync && git submodule update --recursive --remote && git submodule update'
+export PATH="/usr/local/bin:/usr/bin/git:$PATH"
 
 alias g='git'
 alias gpush='git push'
@@ -49,31 +72,27 @@ alias grebase='git pull --rebase'
 alias gup='git fetch && git rebase'
 alias stash='git stash'
 alias pop='git stash pop'
-alias gupalldirs="find . -type d -maxdepth 1 -exec sh -c '(if [ {} != "." ]; then echo; echo; echo {}; cd {}; git pull --rebase; fi;)' ';'"
 
-export PATH="/usr/local/go/bin:$PATH"
-export GOPATH="/opt/gopath"
+alias timer='while true; do date; sleep 1; done;'
 
-fortune | cowsay -f vader-koala
+# Android Stuff
+export ANDROID_HOME=${HOME}/Library/Android/sdk
+export PATH=${PATH}:${ANDROID_HOME}/tools
+export PATH=${PATH}:${ANDROID_HOME}/platform-tools
 
-alias tree="find . -print | sed -e 's;[^/]*/;|____;g;s;____|; |;g'"
+function emulator { cd "$(dirname "$(which emulator)")" && ./emulator "$@"; }
+alias androidemulator="emulator -avd Nexus_5X_API_25_x86"
 
-# /etc/profile.d/complete-hosts.sh
-# Autocomplete Hostnames for SSH etc.
-# by Jean-Sebastien Morisset (http://surniaulula.com/)
-_complete_hosts () {
-  COMPREPLY=()
-  cur="${COMP_WORDS[COMP_CWORD]}"
-  host_list=`{
-    for c in /etc/ssh_config /etc/ssh/ssh_config ~/.ssh/config
-    do [ -r $c ] && sed -n -e 's/^Host[[:space:]]//p' -e 's/^[[:space:]]*HostName[[:space:]]//p' $c
-    done
-    for k in /etc/ssh_known_hosts /etc/ssh/ssh_known_hosts ~/.ssh/known_hosts
-    do [ -r $k ] && egrep -v '^[#\[]' $k|cut -f 1 -d ' '|sed -e 's/[,:].*//g'
-    done
-    sed -n -e 's/^[0-9][0-9\.]*//p' /etc/hosts; }|tr ' ' '\n'|grep -v '*'`
-  COMPREPLY=( $(compgen -W "${host_list}" -- $cur))
-  return 0
+export GOPATH=/Users/kenhkelly/PeakActivity/ws-total
+export PATH="$GOPATH/bin:$PATH"
+
+flushdns() {
+	sudo dscacheutil -flushcache; sudo killall -HUP mDNSResponder
 }
-complete -F _complete_hosts ssh
-complete -F _complete_hosts host
+
+serve() {
+	python -m SimpleHTTPServer ${1:-8000}
+}
+
+alias q='echo Not a command, you dang fool'
+
